@@ -5,10 +5,7 @@ services:
     image: yandex/clickhouse-server
     ports:
       - "8123:8123"
-      - "9000:9000"
     volumes:
-      - click_vol:/var/lib/clickhouse
+      - ./click_data:/var/lib/clickhouse
       - ./table_create:/docker-entrypoint-initdb.d
 
-volumes:
-  click_vol:

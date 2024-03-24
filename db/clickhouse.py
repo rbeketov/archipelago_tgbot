@@ -1,32 +1,79 @@
+import os
+
+
 import clickhouse_connect
-from clickhouse_connect.driver import httputil
+from dotenv import load_dotenv
 
-class ClickClientPool:
-    _instance = None
 
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super(ClickClientPool, cls).__new__(cls)
-            cls._instance._initialize(*args, **kwargs)
-        return cls._instance
+HOST = "HOST_CLICK"
+PORT = "PORT_CLICK"
+DATABASE = "DATABASE_CLICK"
 
-    def _initialize(self, maxsize, num_pools):
-        self.big_pool_mgr = httputil.get_pool_manager(maxsize=maxsize, num_pools=num_pools)
 
-    def get_client(self, host='localhost', username='default', password='password', **kwargs):
-        return clickhouse_connect.get_client(host=host, username=username, password=password, pool_mgr=self.big_pool_mgr, **kwargs)
+class SingleTone(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super().__call__(*args, **kwargs)
+
+        return cls._instances[cls]
+
+
+class ClickClient(metaclass=SingleTone):
+    def __init__(self):
+        load_dotenv()
+
+        self._host = os.environ.get(HOST)
+        self._port = os.environ.get(PORT)
+        self._database = os.environ.get(DATABASE)
+        self._click_client = clickhouse_connect.get_client(
+            host=self._host,
+            port=self._port,
+            username='default',
+        )
+
+        self._click_client.command(f'USE {self._database}')
+
+    def insert_new_message(
+        self,
+        chat_id: int,
+        id_message: int,
+        message_: str,
+        speaker: str,
+        reply: str,
+        timestamp: int,
+    ):
+        data = [[chat_id, id_message, message_, speaker, reply, timestamp]]
+        self._click_client.insert('tg_messages', data, column_names=['chat_id', 'id_message', 'message_', 'speaker', 'reply', 'timestamp'])
+
+    def get_chat_message(
+        self,
+        chat_id: int,
+    ):
+        query_ = f"SELECT * FROM tg_messages WHERE chat_id = {chat_id}"
+        return self._click_client.query(query_).result_rows
     
-    @classmethod
-    def set_pool(cls, maxsize=16, num_pools=2):
-        if cls._instance is None:
-            cls._instance = super(ClickClientPool, cls).__new__(cls)
-            cls._instance._initialize(maxsize, num_pools)
+    def insert_or_update_token(
+        self,
+        note_token: int,
+        chat_id: int,
+    ):
+        query_ = f"SELECT * FROM notes_chat_relations WHERE note_id = {note_token}"
+        result_select = self._click_client.query(query_).result_rows
+        if result_select:
+            query_upd = f"UPDATE notes_chat_relations SET chat_id = {chat_id} WHERE note_id = {note_token};"
+            self._click_client.query(query_upd)
         else:
-            raise("Pool already exists")
-
-
-## Usage
-## ClickClientPool.set_pool(16, 2)
-## ClickClientPool().get_client(agagag, agawg)
-## ClickClientPool.set_pool(16, 2) -> "ERROR"
-## database='github',
+            data = [[note_token, chat_id]]
+            self._click_client.insert('notes_chat_relations', data, column_names=['note_id', 'chat_id'])
+    
+    def get_chat_id_for_token(
+        self,
+        note_token: int,
+    ):
+        query_ = f"SELECT * FROM notes_chat_relations WHERE note_id = {note_token}"
+        result_select = self._click_client.query(query_).result_rows
+        if result_select:
+            return result_select[0][-1]
+        return None
