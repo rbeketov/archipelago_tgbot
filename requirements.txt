@@ -6,6 +6,7 @@ charset-normalizer==3.3.2
 click==8.1.7
 clickhouse-connect==0.7.3
 Flask==3.0.2
+Flask-Cors==4.0.0
 flask-restplus==0.13.0
 idna==3.6
 importlib_metadata==7.1.0

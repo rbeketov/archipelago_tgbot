@@ -8,6 +8,7 @@ from db import ClickClient
 
 
 from flask import Flask, request, jsonify, abort, Blueprint
+from flask_cors import CORS
 
 from dotenv import load_dotenv
 
@@ -42,6 +43,8 @@ class RequestFields(Enum):
 
 
 app = Flask(__name__)
+CORS(app)
+
 click = ClickClient()
 
 @app.route('/get-chat-summarize', methods=['POST'])
