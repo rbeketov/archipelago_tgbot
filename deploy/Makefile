@@ -4,7 +4,7 @@ tg_bot/start:
 	sudo systemctl start tg_bot
 
 tg_bot/demonize:
-	sudo SERVICE=tg_bot PROJECT_DIR=${PROJECT_DIR} /bin/sh daemon.sh
+	SERVICE=tg_bot PROJECT_DIR=${PROJECT_DIR} /bin/sh daemon.sh
 
 chat_summarize/start:
 	sudo systemctl start chat_summarize
