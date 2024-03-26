@@ -1,4 +1,4 @@
-PROJECT_DIR ?= /home/ubuntu
+PROJECT_DIR ?= /home/ubuntu/tg_bot
 
 tg_bot/start:
 	sudo systemctl start tg_bot
