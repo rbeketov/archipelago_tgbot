@@ -1,0 +1,13 @@
+[Unit]
+Description=TG BOT
+After=network.target
+
+[Service]
+WorkingDirectory={{ project_dir }}
+ExecStart={{ python_interpreter }} {{ project_dir }}/tgbot_taker_message.py
+
+Restart=always
+RestartSec=120
+
+[Install]
+WantedBy=multi-user.target
