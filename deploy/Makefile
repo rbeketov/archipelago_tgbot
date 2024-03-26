@@ -13,7 +13,7 @@ chat_summarize/start:
 	sudo systemctl start chat_summarize
 
 chat_summarize/demonize:
-	SERVICE=chat_summarize PROJECT_DIR=${PROJECT_DIR} sudo /bin/sh daemon.sh
+	SERVICE=chat_summarize PROJECT_DIR=${PROJECT_DIR} /bin/sh daemon.sh
 
 chat_summarize/logs:
 	journalctl -u chat_summarize.service
