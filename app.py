@@ -88,6 +88,7 @@ def get_summarize():
 
         response_json = response.json()
         summ_text = response_json["result"]
+        logger.debug("Summ_text:", summ_text)
         json_data = {"summ_text": summ_text}
         return jsonify(json_data)
     except Exception as e:
