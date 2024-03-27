@@ -33,7 +33,7 @@ if not os.path.exists(LOGS_DIR):
 handler = logging.FileHandler(f"{LOGS_DIR}/server.log")
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s') 
 handler.setFormatter(formatter)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 logger.addHandler(handler)
 
 
