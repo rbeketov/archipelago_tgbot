@@ -87,7 +87,7 @@ def get_summarize():
         response = requests.post(url, data=json.dumps(payload), headers=headers)
 
         response_json = response.json()
-        summ_text = response_json["summ_text"]
+        summ_text = response_json["result"]
         json_data = {"summ_text": summ_text}
         return jsonify(json_data)
     except Exception as e:
