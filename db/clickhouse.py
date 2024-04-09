@@ -75,12 +75,12 @@ class ClickClient(metaclass=SingleTone):
         note_token: str,
         chat_id: int,
     ):
-        query_ = f"SELECT * FROM notes_chat_relations WHERE note_id = {note_token}"
+        query_ = f"SELECT * FROM notes_chat_relations WHERE note_id = '{note_token}'"
         q = self._click_client.query(query_)
         result_select = q.result_rows
         q.close()
         if result_select:
-            query_upd = f"UPDATE notes_chat_relations SET chat_id = {chat_id} WHERE note_id = {note_token};"
+            query_upd = f"UPDATE notes_chat_relations SET chat_id = {chat_id} WHERE note_id = '{note_token}';"
             q = self._click_client.query(query_upd)
             q.close()
         else:
@@ -96,9 +96,9 @@ class ClickClient(metaclass=SingleTone):
 
     def get_chat_id_for_token(
         self,
-        note_token: int,
+        note_token: str,
     ):
-        query_ = f"SELECT * FROM notes_chat_relations WHERE note_id = {note_token}"
+        query_ = f"SELECT * FROM notes_chat_relations WHERE note_id = '{note_token}';"
         q = self._click_client.query(query_)
         result_rows = q.result_rows
         q.close()
