@@ -47,7 +47,18 @@ class ClickClient(metaclass=SingleTone):
         timestamp: int,
     ):
         data = [[chat_id, id_message, message_, speaker, reply, timestamp]]
-        self._click_client.insert('tg_messages', data, column_names=['chat_id', 'id_message', 'message_', 'speaker', 'reply', 'timestamp'])
+        self._click_client.insert(
+            'tg_messages',
+            data,
+            column_names=[
+                'chat_id',
+                'id_message',
+                'message_',
+                'speaker',
+                'reply',
+                'timestamp'
+            ]
+        )
 
     def get_chat_message(
         self,
@@ -58,10 +69,10 @@ class ClickClient(metaclass=SingleTone):
         res = q.result_rows
         q.close()
         return res
-    
+
     def insert_or_update_token(
         self,
-        note_token: int,
+        note_token: str,
         chat_id: int,
     ):
         query_ = f"SELECT * FROM notes_chat_relations WHERE note_id = {note_token}"
@@ -72,8 +83,15 @@ class ClickClient(metaclass=SingleTone):
             q.close()
         else:
             data = [[note_token, chat_id]]
-            self._click_client.insert('notes_chat_relations', data, column_names=['note_id', 'chat_id'])
-    
+            self._click_client.insert(
+                'notes_chat_relations',
+                data,
+                column_names=[
+                    'note_id',
+                    'chat_id'
+                ]
+            )
+
     def get_chat_id_for_token(
         self,
         note_token: int,
@@ -82,6 +100,6 @@ class ClickClient(metaclass=SingleTone):
         q = self._click_client.query(query_)
         result_rows = q.result_rows
         q.close()
-        if result_select:
-            return result_select[0][-1]
+        if result_rows:
+            return result_rows[0][-1]
         return None

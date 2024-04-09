@@ -15,7 +15,7 @@ TTL timestamp + INTERVAL 7 DAY;
 
 
 CREATE TABLE IF NOT EXISTS notes_chat_relations (
-    note_id Int64,
+    note_id String,
     chat_id Int64
 ) ENGINE = MergeTree
 ORDER BY note_id
