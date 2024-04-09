@@ -41,10 +41,13 @@ click = ClickClient()
 def config(message):
     try:
         try:
-            token = int(message.text[len("/config"):].strip())
+            token = message.text[len("/config"):].split()[0].strip()
+            if not token:
+                bot.reply_to(message, "Токен не найден")
+                return
         except Exception as e:
             logger.error(f"Не получилось привести токен к int: {e}")
-            bot.reply_to(message, "Проверь токен, он должен быть числовой")
+            bot.reply_to(message, "Токен не найден")
             return
 
         click.insert_or_update_token(token, message.chat.id)
