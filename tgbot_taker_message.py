@@ -84,7 +84,7 @@ def summaraize(message):
         response = requests.post(url, data=json.dumps(payload), headers=headers)
 
         response_json = response.json()
-        summ_text = response_json["summ_text"]
+        summ_text = response_json["result"]
         bot.reply_to(message, summ_text)
     except Exception as e:
         logger.error(f"Не пришла суммаризация: {e}")
@@ -115,5 +115,3 @@ def write_messages_to_click(message):
 
 if __name__ == "__main__":
     bot.polling()
-    
-

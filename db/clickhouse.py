@@ -76,7 +76,9 @@ class ClickClient(metaclass=SingleTone):
         chat_id: int,
     ):
         query_ = f"SELECT * FROM notes_chat_relations WHERE note_id = {note_token}"
-        result_select = self._click_client.query(query_).result_rows
+        q = self._click_client.query(query_)
+        result_select = q.result_rows
+        q.close()
         if result_select:
             query_upd = f"UPDATE notes_chat_relations SET chat_id = {chat_id} WHERE note_id = {note_token};"
             q = self._click_client.query(query_upd)
