@@ -1,11 +1,10 @@
 version: '3'
 
 services:
-  clickhouse:
+  clickhouse_tg_bot:
     image: yandex/clickhouse-server
     ports:
       - "8123:8123"
     volumes:
       - ./click_data:/var/lib/clickhouse
       - ./table_create:/docker-entrypoint-initdb.d
-
