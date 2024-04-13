@@ -101,6 +101,7 @@ class ClickClient(metaclass=SingleTone):
         query_ = f"SELECT * FROM notes_chat_relations WHERE note_id = '{note_token}';"
         q = self._click_client.query(query_)
         result_rows = q.result_rows
+        print(result_rows)
         q.close()
         if result_rows:
             return result_rows[0][-1]

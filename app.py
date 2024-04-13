@@ -54,12 +54,14 @@ def get_summarize():
 
         token = request.json[RequestFields.TOKEN_VALUE.value]
         if token != TOKEN:
+            logger.warning("Не совпадает токен")
             return abort(403)
 
         note_token = request.json[RequestFields.NOTE_TOKEN.value]
-
+        logger.info(f"пришёл токен: {note_token}")
         chat_id = click.get_chat_id_for_token(note_token)
         if chat_id is None:
+            logger.warning("нет такого чата")
             return abort(404)
 
         message_rows = click.get_chat_message(chat_id)
@@ -73,6 +75,10 @@ def get_summarize():
 
             chat_content += curr_mess
 
+        if not chat_content:
+            logger.info("Отдаём \'Слишком мало сообщений\'")
+            json_data = {"summ_text": "Слишком мало сообщений"}
+            return jsonify(json_data)
 
         url = URL_SUMMARAIZE
         payload = {
@@ -90,10 +96,12 @@ def get_summarize():
 
         response_json = response.json()
         summ_text = response_json["result"]
+        logger.info(f"От GPT пришло {summ_text}")
         logger.debug("Summ_text:", summ_text)
         json_data = {"summ_text": summ_text}
         return jsonify(json_data)
     except Exception as e:
+        logger.error("Поймали исключение")
         logger.error(f"Ошибка: {e}")
         return abort(404)
 
