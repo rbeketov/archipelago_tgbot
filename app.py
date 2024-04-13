@@ -50,7 +50,7 @@ click = ClickClient()
 @app.route('/get-chat-summarize', methods=['POST'])
 def get_summarize():
     try:
-        logger.info("Got request:", request.json())
+        logger.info("Got request:", request.json)
 
         token = request.json[RequestFields.TOKEN_VALUE.value]
         if token != TOKEN:

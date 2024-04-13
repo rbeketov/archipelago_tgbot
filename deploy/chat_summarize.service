@@ -1,0 +1,13 @@
+[Unit]
+Description=SUMMARIZE
+After=network.target
+
+[Service]
+WorkingDirectory=/home/ubuntu/tg_bot
+ExecStart=/home/ubuntu/tg_bot/.venv/bin/python /home/ubuntu/tg_bot/app.py
+
+Restart=always
+RestartSec=120
+
+[Install]
+WantedBy=multi-user.target

@@ -3,3 +3,4 @@
 /logs
 /data
 clickhouse/click_data
+__pycache__/
