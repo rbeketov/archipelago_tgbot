@@ -91,7 +91,6 @@ def get_summarize():
             "Content-Type": "application/json"
         }
 
-    
         response = requests.post(url, data=json.dumps(payload), headers=headers)
 
         response_json = response.json()
@@ -104,6 +103,30 @@ def get_summarize():
         logger.error("Поймали исключение")
         logger.error(f"Ошибка: {e}")
         return abort(404)
+
+
+@app.route('/exist-notes-link', methods=['POST'])
+def check_exist_notes_link():
+    try:
+        logger.info("Got request:", request.json)
+        token = request.json[RequestFields.TOKEN_VALUE.value]
+        if token != TOKEN:
+            logger.warning("Не совпадает токен")
+            return abort(403)
+
+        note_token = request.json[RequestFields.NOTE_TOKEN.value]
+        logger.info(f"пришёл токен: {note_token}")
+        chat_data = click.get_chat_data_for_token(note_token)
+        if chat_data is None:
+            logger.warning("нет такого чата")
+            return abort(404)
+
+        return jsonify(chat_data)
+
+    except Exception as e:
+        logger.error("Поймали исключение")
+        logger.error(f"Ошибка: {e}")
+        return abort(400)
 
 
 if __name__ == '__main__':

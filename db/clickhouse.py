@@ -74,23 +74,25 @@ class ClickClient(metaclass=SingleTone):
         self,
         note_token: str,
         chat_id: int,
+        chat_name: str,
     ):
         query_ = f"SELECT * FROM notes_chat_relations WHERE note_id = '{note_token}'"
         q = self._click_client.query(query_)
         result_select = q.result_rows
         q.close()
         if result_select:
-            query_upd = f"UPDATE notes_chat_relations SET chat_id = {chat_id} WHERE note_id = '{note_token}';"
+            query_upd = f"UPDATE notes_chat_relations SET chat_id = {chat_id}, chat_name = {chat_name} WHERE note_id = '{note_token}';"
             q = self._click_client.query(query_upd)
             q.close()
         else:
-            data = [[note_token, chat_id]]
+            data = [[note_token, chat_id, chat_name]]
             self._click_client.insert(
                 'notes_chat_relations',
                 data,
                 column_names=[
                     'note_id',
-                    'chat_id'
+                    'chat_id',
+                    'chat_name',
                 ]
             )
 
@@ -105,4 +107,19 @@ class ClickClient(metaclass=SingleTone):
         q.close()
         if result_rows:
             return result_rows[0][-1]
+        return None
+    
+    def get_chat_data_for_token(
+        self,
+        note_token: str,
+    ):
+        query_ = f"SELECT * FROM notes_chat_relations WHERE note_id = '{note_token}';"
+        q = self._click_client.query(query_)
+        result_rows = q.result_rows
+        q.close()
+        if result_rows:
+            return {
+                "chat_id": result_rows[2][-1],
+                "chat_name": result_rows[1][-1],
+            }
         return None
