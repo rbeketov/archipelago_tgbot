@@ -100,7 +100,7 @@ class ClickClient(metaclass=SingleTone):
         self,
         note_token: str,
     ):
-        query_ = f"SELECT * FROM notes_chat_relations WHERE note_id = '{note_token}';"
+        query_ = f"SELECT chat_id FROM notes_chat_relations WHERE note_id = '{note_token}';"
         q = self._click_client.query(query_)
         result_rows = q.result_rows
         print(result_rows)
@@ -113,13 +113,13 @@ class ClickClient(metaclass=SingleTone):
         self,
         note_token: str,
     ):
-        query_ = f"SELECT * FROM notes_chat_relations WHERE note_id = '{note_token}';"
+        query_ = f"SELECT chat_id, chat_name FROM notes_chat_relations WHERE note_id = '{note_token}';"
         q = self._click_client.query(query_)
         result_rows = q.result_rows
         q.close()
         if result_rows:
             return {
-                "chat_id": result_rows[2][-1],
+                "chat_id": result_rows[0][-1],
                 "chat_name": result_rows[1][-1],
             }
         return None
