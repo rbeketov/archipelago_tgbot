@@ -102,7 +102,7 @@ def get_summarize():
     except Exception as e:
         logger.error("Поймали исключение")
         logger.error(f"Ошибка: {e}")
-        return abort(404)
+        return abort(400, e)
 
 
 @app.route('/exist-notes-link', methods=['POST'])
@@ -126,7 +126,7 @@ def check_exist_notes_link():
     except Exception as e:
         logger.error("Поймали исключение")
         logger.error(f"Ошибка: {e}")
-        return abort(400)
+        return abort(400, e)
 
 
 if __name__ == '__main__':

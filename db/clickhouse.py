@@ -117,9 +117,10 @@ class ClickClient(metaclass=SingleTone):
         q = self._click_client.query(query_)
         result_rows = q.result_rows
         q.close()
+        
         if result_rows:
             return {
-                "chat_id": result_rows[0][-1],
-                "chat_name": result_rows[1][-1],
+                "chat_id": result_rows[0][0],
+                "chat_name": result_rows[0][0],
             }
         return None
