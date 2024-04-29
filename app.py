@@ -130,7 +130,7 @@ def check_exist_notes_link():
 
 
 @app.route('/delete-notes-link', methods=['DELETE'])
-def check_exist_notes_link():
+def delete__notes_link():
     try:
         logger.info("Got request:", request.json)
         token = request.json[RequestFields.TOKEN_VALUE.value]
