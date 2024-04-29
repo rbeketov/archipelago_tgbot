@@ -129,5 +129,27 @@ def check_exist_notes_link():
         return abort(400, e)
 
 
+@app.route('/delete-notes-link', methods=['DELETE'])
+def check_exist_notes_link():
+    try:
+        logger.info("Got request:", request.json)
+        token = request.json[RequestFields.TOKEN_VALUE.value]
+        if token != TOKEN:
+            logger.warning("Не совпадает токен")
+            return abort(403)
+
+        note_token = request.json[RequestFields.NOTE_TOKEN.value]
+        logger.info(f"пришёл токен: {note_token}")
+        status = click.delete_token_link(note_token)
+        if not status:
+            logger.warning(f"замтека {RequestFields.NOTE_TOKEN.value} не приявзана")
+            return abort(404, "Эта замтека не приявзана")
+        return '', 200
+    except Exception as e:
+        logger.error("Поймали исключение")
+        logger.error(f"Ошибка: {e}")
+        return abort(400, e)
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
