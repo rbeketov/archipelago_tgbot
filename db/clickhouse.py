@@ -132,7 +132,7 @@ class ClickClient(metaclass=SingleTone):
         chat_id = self.get_chat_id_for_token(note_token)
         if not chat_id:
             return False
-        query_ = f"DELETE FROM notes_chat_relations WHERE note_id = '{note_token}';" 
+        query_ = f"ALTER TABLE notes_chat_relations DELETE WHERE note_id = '{note_token}';" 
         q = self._click_client.query(query_)
         q.close()
         return True
