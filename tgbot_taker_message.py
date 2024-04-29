@@ -50,7 +50,6 @@ def config(message):
             bot.reply_to(message, "Токен не найден")
             return
 
-        logger.info(message.chat)
         click.insert_or_update_token(token, message.chat.id, message.chat.title)
         bot.reply_to(message, f"Заметка с токеном {token} удачно привязана к чату {message.chat.title}")
     except Exception as e:

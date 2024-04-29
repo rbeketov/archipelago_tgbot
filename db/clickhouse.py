@@ -121,7 +121,7 @@ class ClickClient(metaclass=SingleTone):
         if result_rows:
             return {
                 "chat_id": result_rows[0][0],
-                "chat_name": result_rows[0][0],
+                "chat_name": result_rows[0][1],
             }
         return None
 
