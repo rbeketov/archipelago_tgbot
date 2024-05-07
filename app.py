@@ -24,6 +24,8 @@ IND_REPLY_USER_NAME = 4
 IND_TIME_STAMP = 5
 
 
+MAX_LEN_MESSAGE = 15_000
+
 URL_SUMMARAIZE = os.environ.get("URL_SUMMARAIZE")
 TOKEN = os.environ.get("TOKEN")
 
@@ -50,6 +52,7 @@ click = ClickClient()
 @app.route('/get-chat-summarize', methods=['POST'])
 def get_summarize():
     try:
+        logger.info("endpoint get-chat-summarize")
         logger.info("Got request:", request.json)
 
         token = request.json[RequestFields.TOKEN_VALUE.value]
@@ -80,6 +83,10 @@ def get_summarize():
             json_data = {"summ_text": "Слишком мало сообщений"}
             return jsonify(json_data)
 
+        logger.info(f"endpoint get-chat-summarize: len chat_content = {len(chat_content)}")
+        if len(chat_content) > MAX_LEN_MESSAGE:
+            chat_content = chat_content[-MAX_LEN_MESSAGE:]
+
         url = URL_SUMMARAIZE
         payload = {
             "token": TOKEN,
@@ -96,7 +103,6 @@ def get_summarize():
         response_json = response.json()
         summ_text = response_json["result"]
         logger.info(f"От GPT пришло {summ_text}")
-        logger.debug("Summ_text:", summ_text)
         json_data = {"summ_text": summ_text}
         return jsonify(json_data)
     except Exception as e:
@@ -108,6 +114,7 @@ def get_summarize():
 @app.route('/exist-notes-link', methods=['POST'])
 def check_exist_notes_link():
     try:
+        logger.info("endpoint exist-notes-link")
         logger.info("Got request:", request.json)
         token = request.json[RequestFields.TOKEN_VALUE.value]
         if token != TOKEN:
@@ -121,6 +128,7 @@ def check_exist_notes_link():
             logger.warning("нет такого чата")
             return abort(404)
 
+        logger.info("endpoint exist-notes-link: response 200")
         return jsonify(chat_data)
 
     except Exception as e:
@@ -132,6 +140,7 @@ def check_exist_notes_link():
 @app.route('/delete-notes-link', methods=['DELETE'])
 def delete__notes_link():
     try:
+        logger.info("endpoint delete-notes-link")
         logger.info("Got request:", request.json)
         token = request.json[RequestFields.TOKEN_VALUE.value]
         if token != TOKEN:
