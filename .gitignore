@@ -4,3 +4,5 @@
 /data
 clickhouse/click_data
 __pycache__/
+.mypy_cache
+.DS_Store

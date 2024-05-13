@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS tg_messages (
     reply String,
     timestamp DateTime('Etc/UTC')
 ) ENGINE = MergeTree
-ORDER BY (chat_id, timestamp)
+ORDER BY (timestamp, chat_id)
 TTL timestamp + INTERVAL 7 DAY;
 
 
@@ -21,3 +21,14 @@ CREATE TABLE IF NOT EXISTS notes_chat_relations (
 ) ENGINE = MergeTree
 ORDER BY note_id
 PRIMARY KEY note_id;
+
+CREATE TABLE IF NOT EXISTS tg_chat_summary (
+    chat_id Int64,
+    note_id String,
+    summary String,
+    timestamp_last_message DateTime('Etc/UTC'),
+    timestamp DateTime('Etc/UTC') DEFAULT now()
+) ENGINE = MergeTree
+ORDER BY (timestamp, chat_id) DESC
+TTL timestamp + INTERVAL 7 DAY;
+

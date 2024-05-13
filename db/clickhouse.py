@@ -70,6 +70,35 @@ class ClickClient(metaclass=SingleTone):
         q.close()
         return res
 
+    def get_last_summarize_by_chat_id(
+        self,
+        chat_id: int,
+    ):
+        query_ = f"SELECT summary, timestamp_last_message FROM tg_chat_summary WHERE chat_id = {chat_id} LIMIT 1"
+        q = self._click_client.query(query_)
+        res = q.result_rows
+        q.close()
+        return res
+    
+    def insert_new_summarization(
+        self,
+        chat_id: int,
+        note_id: str,
+        summary: str,
+        timestamp_last_message: int,
+    ):
+        data = [[chat_id, note_id, summary, timestamp_last_message]]
+        self._click_client.insert(
+            'tg_chat_summary',
+            data,
+            column_names=[
+                'chat_id',
+                'note_id',
+                'summary',
+                'timestamp_last_message',
+            ]
+        )
+
     def insert_or_update_token(
         self,
         note_token: str,

@@ -1,0 +1,133 @@
+openapi: 3.0.3
+info:
+  title: Archipelago TG Summarizer
+  version: 0.0.1
+servers:
+  - url: https://archipelago.team:8000
+tags:
+  - name: summarizer
+paths:
+  /get-chat-summarize:
+    post:
+      tags:
+        - summarizer
+      summary: Получить суммаризацию чата Telegram
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                token_note:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  summ_text:
+                    type: string
+        '400':
+          description: Ошибка в запросе
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: Не привязан чат
+          content:
+            application/json:
+              schema:
+                type: string
+        '403':
+          description: Нет доступа к заметке
+  /exist-notes-link:
+    post:
+      tags:
+        - summarizer
+      summary: Проверить привязана ли заметка к чату
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                token_note:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+        '400':
+          description: Ошибка в запросе
+          content:
+            application/json:
+              schema:
+                type: string
+        '403':
+          description: Нет доступа к заметке
+  /delete-notes-link:
+    delete:
+      tags:
+        - summarizer
+      summary: Удалить привязку заметки к чату
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                token_note:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Ошибка в запросе
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: Не привязан чат
+          content:
+            application/json:
+              schema:
+                type: string
+        '403':
+          description: Нет доступа к заметке
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: auth_token
