@@ -78,9 +78,10 @@ def get_summarize():
 
         logger.debug(f"last message: {message_rows[-1][IND_MESSAGE]}")
         time_last_message = message_rows[-1][IND_TIME_STAMP]
-        last_summ = click.get_last_summarize_by_chat_id(chat_id)
+        
+        last_summ = click.get_summarize_chat_by_time_last_message(chat_id, time_last_message)
 
-        if last_summ and time_last_message == last_summ[0][1]:
+        if last_summ:
             json_data = {"summ_text": last_summ[0][0]}
             return jsonify(json_data)
 

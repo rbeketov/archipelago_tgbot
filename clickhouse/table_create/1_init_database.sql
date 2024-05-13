@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS tg_chat_summary (
     chat_id Int64,
     note_id String,
     summary String,
+    role_ String,
+    detail_degree String,
     timestamp_last_message DateTime('Etc/UTC'),
     timestamp DateTime('Etc/UTC') DEFAULT now()
 ) ENGINE = MergeTree

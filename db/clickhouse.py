@@ -70,11 +70,12 @@ class ClickClient(metaclass=SingleTone):
         q.close()
         return res
 
-    def get_last_summarize_by_chat_id(
+    def get_summarize_by_time_last_message(
         self,
         chat_id: int,
+        time_last_message: int,
     ):
-        query_ = f"SELECT summary, timestamp_last_message FROM tg_chat_summary WHERE chat_id = {chat_id} LIMIT 1"
+        query_ = f"SELECT summary FROM tg_chat_summary WHERE chat_id = {chat_id} AND timestamp_last_message = {timestamp_last_message}"
         q = self._click_client.query(query_)
         res = q.result_rows
         q.close()
@@ -85,9 +86,13 @@ class ClickClient(metaclass=SingleTone):
         chat_id: int,
         note_id: str,
         summary: str,
+        role_: str,
+        detail_degree: str,
         timestamp_last_message: int,
     ):
-        data = [[chat_id, note_id, summary, timestamp_last_message]]
+        data = [
+            [chat_id, note_id, summary, role_, detail_degree, timestamp_last_message]
+        ]
         self._click_client.insert(
             'tg_chat_summary',
             data,
@@ -95,6 +100,8 @@ class ClickClient(metaclass=SingleTone):
                 'chat_id',
                 'note_id',
                 'summary',
+                'role_',
+                'detail_degree',
                 'timestamp_last_message',
             ]
         )
