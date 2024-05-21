@@ -81,7 +81,7 @@ class ClickClient(metaclass=SingleTone):
         result_select = q.result_rows
         q.close()
         if result_select:
-            query_upd = f"UPDATE notes_chat_relations SET chat_id = {chat_id}, chat_name = '{chat_name}' WHERE note_id = '{note_token}';"
+            query_upd = f"ALTER TABLE notes_chat_relations UPDATE chat_id = {chat_id}, chat_name = '{chat_name}' WHERE note_id = '{note_token}';"
             q = self._click_client.query(query_upd)
             q.close()
         else:
