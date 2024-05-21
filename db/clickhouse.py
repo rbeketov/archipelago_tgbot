@@ -81,7 +81,7 @@ class ClickClient(metaclass=SingleTone):
         result_select = q.result_rows
         q.close()
         if result_select:
-            query_upd = f"UPDATE notes_chat_relations SET chat_id = {chat_id}, chat_name = {chat_name} WHERE note_id = '{note_token}';"
+            query_upd = f"UPDATE notes_chat_relations SET chat_id = {chat_id}, chat_name = '{chat_name}' WHERE note_id = '{note_token}';"
             q = self._click_client.query(query_upd)
             q.close()
         else:
@@ -108,7 +108,7 @@ class ClickClient(metaclass=SingleTone):
         if result_rows:
             return result_rows[0][-1]
         return None
-    
+
     def get_chat_data_for_token(
         self,
         note_token: str,
@@ -117,7 +117,7 @@ class ClickClient(metaclass=SingleTone):
         q = self._click_client.query(query_)
         result_rows = q.result_rows
         q.close()
-        
+
         if result_rows:
             return {
                 "chat_id": result_rows[0][0],
@@ -132,7 +132,7 @@ class ClickClient(metaclass=SingleTone):
         chat_id = self.get_chat_id_for_token(note_token)
         if not chat_id:
             return False
-        query_ = f"ALTER TABLE notes_chat_relations DELETE WHERE note_id = '{note_token}';" 
+        query_ = f"ALTER TABLE notes_chat_relations DELETE WHERE note_id = '{note_token}';"
         q = self._click_client.query(query_)
         q.close()
         return True
