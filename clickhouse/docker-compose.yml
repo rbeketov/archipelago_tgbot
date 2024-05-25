@@ -2,6 +2,7 @@ version: '3'
 
 services:
   clickhouse_tg_bot:
+    restart: always
     image: yandex/clickhouse-server
     ports:
       - "8123:8123"
