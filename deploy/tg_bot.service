@@ -1,10 +1,10 @@
 [Unit]
-Description=SUMMARIZE
+Description=TG BOT
 After=network.target
 
 [Service]
 WorkingDirectory=/home/yavka/archipelago_tgbot
-ExecStart=/home/yavka/archipelago_tgbot/.venv/bin/python /home/yavka/archipelago_tgbot/app.py
+ExecStart=/home/yavka/archipelago_tgbot/.venv/bin/python /home/yavka/archipelago_tgbot/tgbot_taker_message.py
 
 Restart=always
 RestartSec=120

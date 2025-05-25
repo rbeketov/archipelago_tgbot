@@ -1,4 +1,4 @@
-PROJECT_DIR ?= /home/ubuntu/tg_bot
+PROJECT_DIR ?= /home/yavka/archipelago_tgbot
 
 tg_bot/start:
 	sudo systemctl start tg_bot

@@ -3,6 +3,7 @@ version: '3'
 services:
   clickhouse_tg_bot:
     image: yandex/clickhouse-server
+    restart: on-failure
     ports:
       - "8123:8123"
     volumes:

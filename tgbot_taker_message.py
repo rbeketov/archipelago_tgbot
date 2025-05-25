@@ -20,7 +20,7 @@ IND_SPEAKER = 2
 IND_REPLY_USER_NAME = 4
 IND_TIME_STAMP = 5
 
-
+EXCEPTION_MESSAGE = "Что-то полшло не так, попробуйте ещё раз"
 LOGS_DIR = "logs/"
 
 logger = logging.getLogger(__name__)
@@ -57,7 +57,7 @@ def config(message):
         bot.reply_to(message, "Что-то пошло не так, попробуй снова")
 
 
-@bot.message_handler(commands=['get-summ'])
+@bot.message_handler(commands=['summary'])
 def summaraize(message):
     message_rows = click.get_chat_message(message.chat.id)
     chat_content = ""
@@ -85,10 +85,13 @@ def summaraize(message):
 
         response_json = response.json()
         summ_text = response_json["result"]
-        bot.reply_to(message, summ_text)
+        if summ_text:
+            bot.reply_to(message, summ_text)
+        else:
+            bot.reply_to(message, EXCEPTION_MESSAGE)
     except Exception as e:
         logger.error(f"Не пришла суммаризация: {e}")
-        bot.reply_to(message, "Что-то полшло не так, попробуйте ещё раз")
+        bot.reply_to(message, EXCEPTION_MESSAGE)
 
 
 @bot.message_handler(func=lambda m: True)
